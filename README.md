@@ -31,7 +31,7 @@ php artisan vendor:publish --provider="nailfor\leaflet\Providers\MapServiceProvi
 
 ```
 
-use nailfor\leaflet\leaflet;
+use nailfor\leaflet\Leaflet;
 
 class MapController extends Controller
 {
@@ -43,7 +43,7 @@ class MapController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $map = new leaflet;
+        $map = new Leaflet;
         return $map->render();
     }
 
