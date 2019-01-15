@@ -23,9 +23,13 @@ to the require section of your application's `composer.json` file.
 Usage
 -----
 
+Publish js classes
+
+php artisan vendor:publish --provider="nailfor\leaflet\Providers\MapServiceProvider"
+
 ```
 
-use nailfor\leaflet;
+use nailfor\leaflet\leaflet;
 
 class MapController extends Controller
 {
@@ -42,6 +46,7 @@ class MapController extends Controller
     }
 
 ```
+
 
 Credits
 -------
