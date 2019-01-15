@@ -25,7 +25,9 @@ Usage
 
 Publish js classes
 
+```
 php artisan vendor:publish --provider="nailfor\leaflet\Providers\MapServiceProvider"
+```
 
 ```
 
