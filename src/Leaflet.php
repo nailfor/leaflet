@@ -138,7 +138,7 @@ class Leaflet extends baseModel implements Htmlable{
     L.tileLayer('$this->tileServer', {}).addTo($this->mapVar);
 
    
-</script>script
+</script>
 EOF;
 
         $js[] = "<link rel='stylesheet' href='$this->baseDir/leaflet.css' />";
