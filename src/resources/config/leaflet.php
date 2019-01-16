@@ -35,6 +35,6 @@ return [
     ],
     
     //URL to tile server
-    'tileserver'=> 'https://a.tile.openstreetmap.org/${z}/${x}/${y}.png',
+    'tileserver'=> 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
 
 ];

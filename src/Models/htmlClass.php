@@ -4,7 +4,7 @@
  * @author nailfor
  */
 
-namespace nailfor;
+namespace nailfor\leaflet;
 
 trait htmlClass
 {

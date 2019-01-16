@@ -4,7 +4,7 @@
  * @author nailfor
  */
 
-namespace nailfor;
+namespace nailfor\leaflet;
 
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -78,11 +78,17 @@ class Leaflet extends baseModel implements Htmlable{
     protected $tileServer;
     
     /**
-     * Высота карты в пикселах
+     * Height map in px
      * 
      * @var integer
      */
     protected $height;
+    
+    /**
+     * Objects
+     * @var array
+     */
+    protected $objects;
 
     /**
      * Create the Map
@@ -136,6 +142,13 @@ class Leaflet extends baseModel implements Htmlable{
 EOF;
 
         $js[] = "<link rel='stylesheet' href='$this->baseDir/leaflet.css' />";
+        
+        if (is_array($this->objects)) {
+            foreach($this->objects as $object) {
+                $js[] = $object->getJs();
+            }
+        }
+        
 
         $head = implode("\n", $js);
         
@@ -143,7 +156,7 @@ EOF;
             [$this->mapId =>
                 [
                     'head' => $head,
-                    'html'  => "<div id='$this->mapId' style='height: {$this->height}px;'></div>",
+                    'html'  => "<div id='$this->mapId' style='height: {$this->height}px; width: {$this->height}px;'></div>",
                 ]
             ]
         )->render();
