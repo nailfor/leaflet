@@ -98,6 +98,23 @@ class MapController extends Controller
 
 ```
 
+By default render() use /resources/views/map.blade.php with next content:
+```
+@extends('layout')
+
+@section('content')
+    {!! $map['html'] !!}
+    {!! $map['head'] !!}
+@stop
+```
+But you can change it, use next code:
+```
+        $map = new Leaflet([
+            'view' => 'name_your_view',
+        ]);
+```
+
+
 
 Credits
 -------
