@@ -30,7 +30,7 @@
     },
     "autoload": {
         "psr-4": {
-            "nailfor\\leaflet\\": "src/Models"
+            "nailfor\\leaflet\\": "src"
         }
     },
     "extra": {
