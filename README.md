@@ -103,8 +103,7 @@ By default render() use /resources/views/map.blade.php with next content:
 @extends('layout')
 
 @section('content')
-    {!! $map['html'] !!}
-    {!! $map['head'] !!}
+    {!! $map !!}
 @stop
 ```
 But you can change it, use next code:
