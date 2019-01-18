@@ -150,14 +150,12 @@ EOF;
         }
         
 
-        $head = implode("\n", $js);
+        $body   = "<div id='$this->mapId' style='height: {$this->height}px; '></div>";
+        $script = implode("\n", $js);
         
         return view($this->view, 
-            [$this->mapId =>
-                [
-                    'head' => $head,
-                    'html'  => "<div id='$this->mapId' style='height: {$this->height}px; width: {$this->height}px;'></div>",
-                ]
+            [
+                $this->mapId => $body.$script,
             ]
         )->render();
     }
