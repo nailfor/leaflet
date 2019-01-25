@@ -16,7 +16,7 @@ class Circle extends geoObject
      */
     protected function getMethod() : string
     {
-        return 'circle';
+        return 'v-circle';
     }
 
     /**
@@ -24,14 +24,16 @@ class Circle extends geoObject
      */
     protected function getOptions() : string
     {
-        return "radius: $this->radius, color: $this->color";
-        
+        return ":lat-lng=$this->coord :radius=$this->radius :color='\"$this->color\"'";
     }
     
+    /**
+     * {@inheritdoc}
+     */
     protected function setDefault() : void
     {
-        $this->var          = 'circle';
-        $this->color        = '"red"';
+        $this->color    = 'red';
     }
+ 
     
 }

@@ -13,13 +13,12 @@ trait Popup
     /**
      * Create js for popup
      * 
-     * @param string $var JS name of variable
      * @return string|void
      */
-    protected function getPopup(string $var) : string
+    protected function getPopup() : string
     {
         if ($this->popup){
-            return "$var.bindPopup('$this->popup');";
+            return "<v-popup>$this->popup</v-popup>";
         }
         
         return '';

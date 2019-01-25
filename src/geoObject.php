@@ -19,24 +19,13 @@ abstract class geoObject extends baseModel
     
     
     /**
-     * Name js variable
+     * Coordinate of object
      * 
-     * @var string
+     * @var array
      */
-    protected $var;
-    
     protected $coord;
     
     
-    /**
-     * Set default variables
-     * 
-     * @return void
-     */
-    protected function setDefault() : void
-    {
-    }
-
     /**
      * Configure model after construct
      * 
@@ -50,50 +39,47 @@ abstract class geoObject extends baseModel
     }
     
     /**
-     * Convert array to json
-     * 
-     * @param array $vars Array with text variables to jsonize
-     * @return void
+     * Return method name Leaflet L.{method}()
+     * @return string name
      */
-    protected function jsonize(array $vars) : void
-    {
-        foreach($vars as $var){
-            $this->$var = json_encode($this->$var);
-        }
-    }
+    abstract protected function getMethod() : string;
     
     /**
-     * Create the Marker
-     *
-     * @param array $params
-     * @return this
+     * Return options of Leaflet L.xxxx([], {options})
+     * @return string options
      */
-    public function __construct(array $params = [])
-    {
-        //default settings
-        $this->mapVar       = config('leaflet.map.var');
-        $this->setDefault();
-
-        foreach ($params as $k => $v) {
-            $this->__set($k, $v);
-        }
-        $this->afterConstruct();
-        
-        return $this;
-    }
-    
-    abstract protected function getMethod() : string;
     abstract protected function getOptions() : string;
 
+    /**
+     * Called before Object is created
+     * 
+     * @return string Applied JS 
+     */
     protected function beforeJs() : string
     {
         return '';
     }    
     
+    /**
+     * Called after Object is created
+     * 
+     * @return string Applied JS 
+     */
     protected function afterJs() : string
     {
         return '';
-    }    
+    }
+
+    /**
+     * Insert inner code
+     * 
+     * @return string Code for inner section
+     */
+    protected function getInner() : string
+    {
+        return '';
+    }
+
     
     /**
      * Create js for object
@@ -106,17 +92,17 @@ abstract class geoObject extends baseModel
         $options    = $this->getOptions();
         $before     = $this->beforeJs();
         $after      = $this->afterJs();
-        $popup      = $this->getPopup($this->var);
+        $popup      = $this->getPopup();
+        $inner      = $this->getInner();
         
-        $js = <<<EOF
-<script type='text/javascript'>
-    $before
-    var $this->var = L.$method($this->coord, { $options }).addTo($this->mapVar);
-    $popup
-    $after
-</script>
+        $result = <<<EOF
+$before
+<$method $options>
+    $inner $popup
+</$method>
+$after
 EOF;
-        return $js;
+        return $result;
     }
 
 }

@@ -55,8 +55,8 @@ class MapServiceProvider extends ServiceProvider
     protected function loadPackageAssets(): void
     {
         // only publish compiled assets
-        $this->publishes([
-            __DIR__ . '/../../../../bower-asset/leaflet/dist' => base_path('public/vendor/leaflet')
-        ], 'assets');
+        //$this->publishes([
+        //    __DIR__ . '/../../../../bower-asset/leaflet/dist' => base_path('public/vendor/leaflet')
+        //], 'assets');
     }    
 }

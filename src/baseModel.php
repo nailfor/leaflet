@@ -10,6 +10,55 @@ use InvalidArgumentException;
 
 class baseModel
 {
+    /**
+     * Set default variables
+     * 
+     * @return void
+     */
+    protected function setDefault() : void
+    {
+    }
+
+    /**
+     * Configure model after construct
+     * 
+     * @return void
+     */
+    protected function afterConstruct() : void
+    {
+    }
+
+    /**
+     * Convert array to json
+     * 
+     * @param array $vars Array with text variables to jsonize
+     * @return void
+     */
+    protected function jsonize(array $vars) : void
+    {
+        foreach($vars as $var){
+            $this->$var = json_encode($this->$var);
+        }
+    }
+    
+    /**
+     * Create the Model
+     *
+     * @param array $params
+     * @return this
+     */
+    public function __construct(array $params = [])
+    {
+        //default settings
+        $this->setDefault();
+
+        foreach ($params as $k => $v) {
+            $this->__set($k, $v);
+        }
+        $this->afterConstruct();
+        
+        return $this;
+    }
 
     /**
      * Dynamically get an attribute

@@ -11,6 +11,7 @@ Either run
 
 ```
 composer require nailfor/leaflet
+npm install vue2-leaflet --save
 ```
 or add
 
@@ -29,6 +30,20 @@ Publish js classes
 php artisan vendor:publish --provider="nailfor\leaflet\Providers\MapServiceProvider"
 ```
 
+Register components in app.js
+```
+import Vue2Leaflet from 'vue2-leaflet';
+Vue.component('v-map', Vue2Leaflet.LMap);
+Vue.component('v-tilelayer', Vue2Leaflet.LTileLayer);
+Vue.component('v-marker', Vue2Leaflet.LMarker);
+Vue.component('v-circle', Vue2Leaflet.LCircle);
+Vue.component('v-polygon', Vue2Leaflet.LPolygon);
+Vue.component('v-control', Vue2Leaflet.LControlZoom);
+Vue.component('v-popup', Vue2Leaflet.LPopup);
+Vue.component('v-icon', Vue2Leaflet.LIcon);
+```
+
+Example Controller
 ```
 
 use nailfor\leaflet\Leaflet;
@@ -52,6 +67,7 @@ class MapController extends Controller
             'icon'      => 'icon/leaf-green.png',
             'shadow'    => 'icon/leaf-shadow.png',
             'popup'     => 'Москва',
+            'draggable' => true,
             'ajax'      => '/map/ajax',     //for dynamic updadate coordinates
             'ajaxDelay' => 1,               //delay call /map/ajax in seconds
         ]);
@@ -103,8 +119,7 @@ By default render() use /resources/views/map.blade.php with next content:
 @extends('layout')
 
 @section('content')
-    {!! $map['html'] !!}
-    {!! $map['head'] !!}
+    {!! $map !!}
 @stop
 ```
 But you can change it, use next code:

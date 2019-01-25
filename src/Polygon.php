@@ -15,7 +15,7 @@ class Polygon extends geoObject
      */
     protected function getMethod() : string
     {
-        return 'polygon';
+        return 'v-polygon';
     }
 
     /**
@@ -23,7 +23,7 @@ class Polygon extends geoObject
      */
     protected function getOptions() : string
     {
-        return "color: '$this->color'";
+        return ":lat-lngs='$this->coord' :color='\"$this->color\"'";
         
     }
 
@@ -57,7 +57,6 @@ class Polygon extends geoObject
      */
     protected function setDefault() : void
     {
-        $this->var          = 'polygon';
         $this->color        = 'blue';
     }
     

@@ -91,36 +91,65 @@ class Leaflet extends baseModel implements Htmlable{
     protected $objects;
 
     /**
-     * Create the Map
-     *
-     * @param array $params
-     * @return Map
-     * @throws \Exception
+     * {@inheritdoc}
      */
-    public function __construct(array $params = [])
+    protected function setDefault() : void
     {
         //default settings
         $this->view     = config('leaflet.view', 'map');
-        $this->baseDir  = config('leaflet.basedir','/vendor/leaflet/'); 
 
         //Must be set in config file
         $this->height    = config('leaflet.height');
         $this->mapId    = config('leaflet.map.id');
-        $this->mapVar   = config('leaflet.map.var');
         $this->Lat      = config('leaflet.center.lat');
         $this->Lon      = config('leaflet.center.lon');
         $this->options  = config('leaflet.options');
         $this->zoom     = config('leaflet.zoom');
         $this->tileServer = config('leaflet.tileserver');
-
-        foreach ($params as $k => $v) {
-            $this->__set($k, $v);
-        }
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function afterConstruct() : void
+    {
         $this->options  = json_encode($this->options);
-        $this->zoom     = json_encode($this->zoom);
-
-        return $this;
+        $this->zoom     = $this->zoom;
     }    
+    
+    /**
+     * Возвращает объекты карты
+     * 
+     * @return string
+     */
+    protected function getObjects() : string
+    {
+        $js = [];        
+        if (is_array($this->objects)) {
+            foreach($this->objects as $object) {
+                $js[] = $object->getJs();
+            }
+        }
+        return implode("\n", $js);
+    }
+    
+    /**
+     * Возвращает элемент управления карты
+     * 
+     * @return string
+     */
+    protected function getControl() : string
+    {
+        $control = '';
+        if ($this->zoom) {
+            $zoomIn     = $this->zoom['zoomInTitle'];
+            $zoomOut    = $this->zoom['zoomOutTitle'];
+            $position   = $this->zoom['position'];
+            
+            $control = "<v-control zoom-in-title='$zoomIn' zoom-out-title='$zoomOut' position='$position'></v-control>";
+        }
+        return $control;
+    }
     
     /**
      * Render the map as HTML on the user defined view
@@ -130,32 +159,23 @@ class Leaflet extends baseModel implements Htmlable{
      */
     public function render()
     {
-        $js[] = "<script src='$this->baseDir/leaflet.js' type='text/javascript'></script>";
-        $js[] = <<<EOF
-<script type='text/javascript'>
-    var $this->mapVar = L.map('$this->mapId', $this->options).setView([$this->Lat,$this->Lon], 13);
-    L.control.zoom($this->zoom).addTo($this->mapVar);
-    L.tileLayer('$this->tileServer', {}).addTo($this->mapVar);
-
-   
-</script>
+        $control = $this->getControl();
+        $objects = $this->getObjects();
+        
+        $body   = <<<EOF
+<div style='height: {$this->height}px; '>
+    <v-map :zoom=13 :center="[$this->Lat,$this->Lon]" :options='$this->options'>
+        <v-tilelayer url="$this->tileServer"></v-tilelayer>
+        $control
+        $objects
+    </v-map>
+</div>
 EOF;
+//echo $body;exit;
 
-        $js[] = "<link rel='stylesheet' href='$this->baseDir/leaflet.css' />";
-        
-        if (is_array($this->objects)) {
-            foreach($this->objects as $object) {
-                $js[] = $object->getJs();
-            }
-        }
-        
-
-        $body   = "<div id='$this->mapId' style='height: {$this->height}px; '></div>";
-        $script = implode("\n", $js);
-        
         return view($this->view, 
             [
-                $this->mapId => $body.$script,
+                $this->mapId => $body,
             ]
         )->render();
     }
