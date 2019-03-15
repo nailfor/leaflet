@@ -11,6 +11,13 @@ use InvalidArgumentException;
 class baseModel
 {
     /**
+     * Client options of Leaflet plugin
+     * 
+     * @var array
+     */
+    protected $options = [];
+    
+    /**
      * Set default variables
      * 
      * @return void

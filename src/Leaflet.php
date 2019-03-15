@@ -8,7 +8,8 @@ namespace nailfor\leaflet;
 
 use Illuminate\Contracts\Support\Htmlable;
 
-class Leaflet extends baseModel implements Htmlable{
+class Leaflet extends baseModel implements Htmlable
+{
     use htmlClass;
     
     /**
@@ -57,13 +58,6 @@ class Leaflet extends baseModel implements Htmlable{
     protected $view;
     
     /**
-     * Client options of Leaflet plugin
-     * 
-     * @var array
-     */
-    protected $options;
-    
-    /**
      * Zoom options(localizations)
      * 
      * @var array 
@@ -91,6 +85,13 @@ class Leaflet extends baseModel implements Htmlable{
     protected $objects;
 
     /**
+     * Plugins Leafleat
+     * @var array; 
+     */
+    protected $plugins = [];
+
+
+    /**
      * {@inheritdoc}
      */
     protected function setDefault() : void
@@ -114,27 +115,38 @@ class Leaflet extends baseModel implements Htmlable{
     protected function afterConstruct() : void
     {
         $this->options  = json_encode($this->options);
-        $this->zoom     = $this->zoom;
     }    
     
     /**
-     * Возвращает объекты карты
+     * Call getJs for all elements of collection
+     * @param array $array
+     * @return string
+     */
+    protected function getJs(array $array) : string
+    {
+        $js = [];        
+        foreach($array as $object) {
+            $js[] = $object->getJs();
+        }
+        return implode("\n", $js);
+        
+    }
+    
+    /**
+     * Return map objects
      * 
      * @return string
      */
     protected function getObjects() : string
     {
-        $js = [];        
         if (is_array($this->objects)) {
-            foreach($this->objects as $object) {
-                $js[] = $object->getJs();
-            }
+            return $this->getJs($this->objects);
         }
-        return implode("\n", $js);
+        return '';
     }
     
     /**
-     * Возвращает элемент управления карты
+     * Return map control
      * 
      * @return string
      */
@@ -152,6 +164,29 @@ class Leaflet extends baseModel implements Htmlable{
     }
     
     /**
+     * Return rendered plugin separated by \n 
+     * @return string
+     */
+    protected function getPlugins() : string
+    {
+        return $this->getJs($this->plugins);
+    }
+    
+    /**
+     * Install plugin into lefleat
+     * @param LeafletPlugin $plugin
+     * @throws \Exception
+     */
+    public function installPlugin($plugin)
+    {
+        if (!($plugin instanceof geoObject))
+        {
+            throw new \Exception('Install may be instance of LeafletPlugin');
+        }
+        $this->plugins[] = $plugin;
+    }
+    
+    /**
      * Render the map as HTML on the user defined view
      *
      * @return string
@@ -161,17 +196,18 @@ class Leaflet extends baseModel implements Htmlable{
     {
         $control = $this->getControl();
         $objects = $this->getObjects();
+        $plugins = $this->getPlugins();
         
         $body   = <<<EOF
 <div style='height: {$this->height}px; '>
     <v-map :zoom=13 :center="[$this->Lat,$this->Lon]" :options='$this->options'>
         <v-tilelayer url="$this->tileServer"></v-tilelayer>
         $control
+        $plugins
         $objects
     </v-map>
 </div>
 EOF;
-//echo $body;exit;
 
         return view($this->view, 
             [

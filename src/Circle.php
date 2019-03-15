@@ -22,9 +22,14 @@ class Circle extends geoObject
     /**
      * {@inheritdoc}
      */
-    protected function getOptions() : string
+    protected function getOptions() : array
     {
-        return ":lat-lng=$this->coord :radius=$this->radius :color='\"$this->color\"'";
+        return [
+            ":lat-lng"  => $this->coord,
+            ":radius"   => $this->radius,
+            ":color"    => $this->color,
+            
+        ];
     }
     
     /**

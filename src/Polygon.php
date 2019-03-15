@@ -21,9 +21,12 @@ class Polygon extends geoObject
     /**
      * {@inheritdoc}
      */
-    protected function getOptions() : string
+    protected function getOptions() : array
     {
-        return ":lat-lngs='$this->coord' :color='\"$this->color\"'";
+        return [
+            ':lat-lngs' => $this->coord,
+            ':color'    => $this->color,
+        ];
         
     }
 

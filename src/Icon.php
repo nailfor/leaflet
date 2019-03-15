@@ -83,9 +83,14 @@ trait Icon
      * 
      * @return string Code for icon
      */
-    protected function getIconOptions() : string
+    protected function getIconOptions() : array
     {
-        return "icon-url='$this->icon' :icon-size=$this->iconSize :icon-anchor=$this->iconAnchor";
+        return [
+            'icon-url'      => $this->icon,
+            ':icon-size'    => $this->iconSize,
+            ':icon-anchor'  => $this->iconAnchor,
+            ':popup-anchor' => $this->popupAnchor,
+        ];
     }
 
 
@@ -96,7 +101,15 @@ trait Icon
      */
     protected function getShadowOptions() : string
     {
-        return $this->shadow ? "shadow-url='$this->shadow' :shadow-size=$this->shadowSize :shadow-anchor=$this->shadowAnchor" : '';
+        $options = [];
+        if ($this->shadow) {
+            $options = [
+                'shadow-url'    => $this->shadow,
+                ':shadow-size'  => $this->shadowSize,
+                ':shadow-anchor'=> $this->shadowAnchor,
+            ];
+        }
+        return $options;
     }
    
     /**
@@ -108,9 +121,11 @@ trait Icon
     {
         $code = '';
         if ($this->icon) {
-            $icon   = $this->getIconOptions();
-            $shadow = $this->getShadowOptions();
-            $code   = "<v-icon :popup-anchor=$this->popupAnchor $icon $shadow></v-icon>";
+            $options= $this->getKetVal(array_merge(
+                    $this->getIconOptions(), 
+                    $this->getShadowOptions()
+            ));
+            $code   = "<v-icon $options></v-icon>";
         }
         return $code;
     }

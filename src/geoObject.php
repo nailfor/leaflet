@@ -46,10 +46,19 @@ abstract class geoObject extends baseModel
     
     /**
      * Return options of Leaflet L.xxxx([], {options})
-     * @return string options
+     * @return array options
      */
-    abstract protected function getOptions() : string;
+    abstract protected function getOptions() : array;
 
+    /**
+     * Set options
+     * @param type $options
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
+    }
+    
     /**
      * Called before Object is created
      * 
@@ -80,6 +89,20 @@ abstract class geoObject extends baseModel
         return '';
     }
 
+    /**
+     * Return key='val' pairs
+     * @param type $array
+     * @return string
+     */
+    protected function getKeyVal($array) : string
+    {
+        $res = '';
+        foreach($array as $key=>$val) {
+            $res.= "$key='$val' ";
+        }
+        return $res;
+    }
+    
     
     /**
      * Create js for object
@@ -89,7 +112,7 @@ abstract class geoObject extends baseModel
     public function getJs() : string
     {
         $method     = $this->getMethod();
-        $options    = $this->getOptions();
+        $options    = $this->getKeyVal(array_merge($this->getOptions(), $this->options));
         $before     = $this->beforeJs();
         $after      = $this->afterJs();
         $popup      = $this->getPopup();
