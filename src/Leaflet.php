@@ -77,12 +77,6 @@ class Leaflet extends baseModel implements Htmlable
      * @var integer
      */
     protected $height;
-    
-    /**
-     * Objects
-     * @var array
-     */
-    protected $objects;
 
     /**
      * Plugins Leafleat
@@ -118,34 +112,6 @@ class Leaflet extends baseModel implements Htmlable
     }    
     
     /**
-     * Call getJs for all elements of collection
-     * @param array $array
-     * @return string
-     */
-    protected function getJs(array $array) : string
-    {
-        $js = [];        
-        foreach($array as $object) {
-            $js[] = $object->getJs();
-        }
-        return implode("\n", $js);
-        
-    }
-    
-    /**
-     * Return map objects
-     * 
-     * @return string
-     */
-    protected function getObjects() : string
-    {
-        if (is_array($this->objects)) {
-            return $this->getJs($this->objects);
-        }
-        return '';
-    }
-    
-    /**
      * Return map control
      * 
      * @return string
@@ -161,15 +127,6 @@ class Leaflet extends baseModel implements Htmlable
             $control = "<v-control zoom-in-title='$zoomIn' zoom-out-title='$zoomOut' position='$position'></v-control>";
         }
         return $control;
-    }
-    
-    /**
-     * Return rendered plugin separated by \n 
-     * @return string
-     */
-    protected function getPlugins() : string
-    {
-        return $this->getJs($this->plugins);
     }
     
     /**
@@ -195,16 +152,16 @@ class Leaflet extends baseModel implements Htmlable
     public function render()
     {
         $control = $this->getControl();
-        $objects = $this->getObjects();
-        $plugins = $this->getPlugins();
+        $inner  = $this->getInner($this->inner);
+        $plugins = $this->getInner($this->plugins);
         
         $body   = <<<EOF
 <div style='height: {$this->height}px; '>
     <v-map :zoom=13 :center="[$this->Lat,$this->Lon]" :options='$this->options'>
-        <v-tilelayer url="$this->tileServer"></v-tilelayer>
         $control
+        <v-tilelayer url="$this->tileServer" name="Cхема" layer-type='base'></v-tilelayer>
         $plugins
-        $objects
+        $inner
     </v-map>
 </div>
 EOF;

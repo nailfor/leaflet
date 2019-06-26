@@ -45,7 +45,7 @@ class Marker extends geoObject
     /**
      * {@inheritdoc}
      */
-    protected function getInner() : string
+    protected function getInner($array) : string
     {
         return $this->getIcon();
     }
@@ -58,7 +58,7 @@ class Marker extends geoObject
         $options = [
             ':lat-lng' => $this->coord,
         ];
-        if ($draggable) {
+        if ($this->draggable) {
             $options[':draggable'] = true;
         }
         

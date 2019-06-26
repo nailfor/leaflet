@@ -80,16 +80,6 @@ abstract class geoObject extends baseModel
     }
 
     /**
-     * Insert inner code
-     * 
-     * @return string Code for inner section
-     */
-    protected function getInner() : string
-    {
-        return '';
-    }
-
-    /**
      * Return key='val' pairs
      * @param type $array
      * @return string
@@ -116,12 +106,13 @@ abstract class geoObject extends baseModel
         $before     = $this->beforeJs();
         $after      = $this->afterJs();
         $popup      = $this->getPopup();
-        $inner      = $this->getInner();
+        $inner      = $this->getInner($this->inner);
         
         $result = <<<EOF
 $before
 <$method $options>
-    $inner $popup
+    $inner
+    $popup
 </$method>
 $after
 EOF;

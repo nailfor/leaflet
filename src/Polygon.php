@@ -25,7 +25,7 @@ class Polygon extends geoObject
     {
         return [
             ':lat-lngs' => $this->coord,
-            ':color'    => $this->color,
+            'color'    => $this->color,
         ];
         
     }

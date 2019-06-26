@@ -99,7 +99,7 @@ trait Icon
      * 
      * @return string Code for shadow
      */
-    protected function getShadowOptions() : string
+    protected function getShadowOptions() : array
     {
         $options = [];
         if ($this->shadow) {
@@ -121,7 +121,7 @@ trait Icon
     {
         $code = '';
         if ($this->icon) {
-            $options= $this->getKetVal(array_merge(
+            $options= $this->getKeyVal(array_merge(
                     $this->getIconOptions(), 
                     $this->getShadowOptions()
             ));

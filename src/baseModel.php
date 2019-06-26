@@ -16,6 +16,22 @@ class baseModel
      * @var array
      */
     protected $options = [];
+    protected $inner = [];
+    
+    /**
+     * Insert inner code
+     * 
+     * @return string Code for inner section
+     */
+    protected function getInner($array) : string
+    {
+        $js = [];        
+        foreach($array as $item) {
+            $js[] = $item->getJs();
+        }
+        
+        return implode("\n", $js);
+    }
     
     /**
      * Set default variables
